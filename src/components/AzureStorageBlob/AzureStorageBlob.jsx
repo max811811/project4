@@ -5,9 +5,12 @@
 import { BlobServiceClient, ContainerClient} from '@azure/storage-blob';
 
 const containerName = `tutorial-container`;
-const sasToken = process.env.REACT_APP_STORAGESASTOKEN;
+let sasToken = process.env.REACT_APP_STORAGESASTOKEN;
 const storageAccountName = process.env.REACT_APP_STORAGERESOURCENAME; 
 // </snippet_package>
+if (sasToken[1] === '?'){
+  sasToken=sasToken.substring(3)
+}
 
 // <snippet_isStorageConfigured>
 // Feature flag - disable storage feature to app if not configured
