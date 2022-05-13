@@ -12,6 +12,8 @@ const storageAccountName = process.env.REACT_APP_STORAGERESOURCENAME;
 // <snippet_isStorageConfigured>
 // Feature flag - disable storage feature to app if not configured
 export const isStorageConfigured = () => {
+  console.log("NAME", storageAccountName)
+  console.log("SASTOKEN", sasToken)
   return (!storageAccountName || !sasToken) ? false : true;
 }
 // </snippet_isStorageConfigured>
