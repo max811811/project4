@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { post1PDF} from '../../utilities/azure-api'
 // import Path from 'path';
 import uploadFileToBlob, { isStorageConfigured } from '../AzureStorageBlob/AzureStorageBlob';
 
@@ -9,9 +10,10 @@ export default function UploadForm() {
     const [uploading, setUploading] = useState(false);
     const [inputKey, setInputKey] = useState(Math.random().toString(36));
     const [fileSelected, setFileSelected] = useState(null)
-    const [blobList, setBlobList] = useState()
+    const [blobList, setBlobList] = useState(1)
 
     const DisplayForm = () => (
+        
         <div>
             <input type="file" onChange={onFileChange} key={inputKey || ''} />
             <button type="submit" onClick={onFileUpload}>
@@ -21,35 +23,21 @@ export default function UploadForm() {
     )
 
     const onFileChange = (event) => {
+        
         setFileSelected(event.target.files[0])
     }
 
 
-    // const DisplayImagesFromContainer = () => (
-    //     <div>
-    //       <h2>Container items</h2>
-    //       <ul>
-    //         {blobList.map((item) => {
-    //           return (
-    //             <li key={item}>
-    //               <div>
-    //                 {Path.basename(item)}
-    //                 <br />
-    //                 <img src={item} alt={item} height="200" />
-    //               </div>
-    //             </li>
-    //           );
-    //         })}
-    //       </ul>
-    //     </div>
-    //   );
 
-    const onFileUpload = async () => {
-        setUploading(true);
+
+    const onFileUpload = async (event) => {
+       
+      setUploading(true);
         const blobsInContainer = await uploadFileToBlob(fileSelected);
-        console.log(blobList)
         setBlobList(blobsInContainer);
-        console.log(blobList)
+        console.log("blobsincontainer2", blobsInContainer.slice(-1)[0] )
+        const newPdfModelItem = blobsInContainer.slice(-1)[0]
+        const returnedFromPDFModel = await post1PDF(newPdfModelItem)
         setFileSelected(null);
         setUploading(false);
         setInputKey(Math.random().toString(36));
@@ -63,7 +51,23 @@ export default function UploadForm() {
         {storageConfigured && !uploading && DisplayForm()}
         {storageConfigured && uploading && <div>Uploading</div>}
         <hr />
-        {/* <img src={blobList[4]} ></img> */}
+        <div>
+          <h2>Container items</h2>
+          <ul>
+                <li>
+                  <div>
+                    <br />
+                    <img src={blobList[1]} ></img>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <br />
+                    <img src={blobList[2]} ></img>
+                  </div>
+                </li>
+          </ul>
+        </div>
         {/* {storageConfigured && blobList.length > 0 && DisplayImagesFromContainer()} */}
         {!storageConfigured && <div>Storage is not configured.</div>}
       </div>
@@ -71,3 +75,25 @@ export default function UploadForm() {
     );
   };
        
+
+
+
+
+      // const DisplayImagesFromContainer = () => (
+    //     <div>
+    //       <h2>Container items</h2>
+    //       <ul>
+    //         {blobList.map((item) => {
+    //           return (
+    //             <li key={item}>
+    //               <div>
+    //                 {item}
+    //                 <br />
+    //                 <img src={item} alt={item} height="200" />
+    //               </div>
+    //             </li>
+    //           );
+    //         })}
+    //       </ul>
+    //     </div>
+    //   );

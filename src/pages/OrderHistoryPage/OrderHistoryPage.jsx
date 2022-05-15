@@ -1,5 +1,5 @@
 import { checkToken } from '../../utilities/users-service'
-
+import Table from '../../components/Table/Table'
 
 export default function OrderHistoryPage() {
 
@@ -15,7 +15,7 @@ export default function OrderHistoryPage() {
         <>
             <h1>OrderHistoryPage</h1>
             <button onClick={handleCheckToken}>Check when my Login Expires</button>
-
+            <Table />
         </>
     )
 }
