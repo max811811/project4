@@ -11,7 +11,7 @@ module.exports = {
 
 
 async function newPDFModelItem(req, res) {
-    console.log("here2")
+    
     // try {
     //   const uploadedPDFs = await UploadedPDFs.create(req.body);
     //   console.log("uploadedPDFs3", uploadedPDFs)

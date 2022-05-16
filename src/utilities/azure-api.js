@@ -3,7 +3,7 @@ import { getToken } from './users-service'
 const BASE_URL = '/api/azure';
 
 export function post1PDF(newPDFModelItem) {
-    console.log("here1")
+    console.log("newPDFModelItem", newPDFModelItem)
     return sendRequest(`${BASE_URL}/newPDFModelItem`, 'POST', newPDFModelItem);
 }
 
@@ -16,7 +16,7 @@ async function sendRequest(url, method = 'GET', payload = null) {
     const options = { method };
     if (payload) {
       options.headers = { 'Content-Type': 'application/json' };
-      options.body = JSON.stringify(payload);
+      options.body = JSON.parse(payload);
     }
     const token = getToken()
     if (token) {

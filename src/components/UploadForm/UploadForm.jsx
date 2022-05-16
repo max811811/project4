@@ -36,11 +36,18 @@ export default function UploadForm() {
         const blobsInContainer = await uploadFileToBlob(fileSelected);
         setBlobList(blobsInContainer);
         console.log("blobsincontainer2", blobsInContainer.slice(-1)[0] )
+        
+
         const newPdfModelItem = blobsInContainer.slice(-1)[0]
-        const returnedFromPDFModel = await post1PDF(newPdfModelItem)
+        const newPdfModelItemObject = {URL: newPdfModelItem}
+
+        console.log("newPdfModelItemObject", newPdfModelItemObject)
+        // console.log("newPDFModelItem", newPdfModelItem)
+        
         setFileSelected(null);
         setUploading(false);
         setInputKey(Math.random().toString(36));
+        const returnedFromPDFModel = await post1PDF(newPdfModelItemObject)
 
     };
 
@@ -57,7 +64,7 @@ export default function UploadForm() {
                 <li>
                   <div>
                     <br />
-                    <img src={blobList[1]} ></img>
+                    <h4> {blobList[1]} </h4> 
                   </div>
                 </li>
                 <li>
