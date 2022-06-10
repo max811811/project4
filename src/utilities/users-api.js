@@ -3,6 +3,7 @@ import { getToken } from './users-service'
 const BASE_URL = '/api/users';
 
 export function signUp(userData) {
+  
   return sendRequest(BASE_URL, 'POST', userData);
 }
 
@@ -19,13 +20,14 @@ export function checkToken() {
 
 /*--- Helper Functions ---*/
 
-async function sendRequest(url, method = 'GET', payload = null) {
+export async function sendRequest(url, method = 'GET', payload = null) {
   // Fetch accepts an options object as the 2nd argument
   // used to include a data payload, set headers, etc. 
   const options = { method };
   if (payload) {
     options.headers = { 'Content-Type': 'application/json' };
     options.body = JSON.stringify(payload);
+    
   }
   const token = getToken()
   if (token) {

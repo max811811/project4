@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const SALT_ROUNDS = 6
 
 const uploadedPDFsSchema = new Schema({
-    url: {type: String, required: true},
+    blobURL: {type: String, required: true},
     
 }, 
 {
@@ -19,8 +19,8 @@ const uploadedPDFsSchema = new Schema({
 });
 
 uploadedPDFsSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
+    
+    
     return next();
 });
   

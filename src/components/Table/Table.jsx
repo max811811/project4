@@ -1,7 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
+import { deletePDF } from "../UploadForm/UploadForm"
+import { allPDFs } from "../../utilities/azure-api"
 
 export default function Table() {
+    
+       
+    const onFileUpload = async (event) => {
+        const allPDFsList = await allPDFs
+        console.log(allPDFsList)
+    }
+    //   function NumberList(props) {
+    //     const numbers = props.numbers;
+    //     const listItems = numbers.map((number) =>
+    //       // Correct! Key should be specified inside the array.
+    //       <ListItem key={number.toString()} value={number} />
+    //     );
+    //     return (
+    //       <ul>
+    //         {listItems}
+    //       </ul>
+    //     );
+    //   }
+
+
+
+
+
+
 
     const data = React.useMemo(
         () => [
@@ -84,7 +110,6 @@ export default function Table() {
                 {rows.map(row => {
                 prepareRow(row)
                 return (
-                    
                     <tr {...row.getRowProps()}>
                         {row.cells.map(cell => {
                         return (
