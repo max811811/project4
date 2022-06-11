@@ -14,6 +14,7 @@ import uploadFileToBlob, { isStorageConfigured } from '../AzureStorageBlob/Azure
 
 const storageConfigured = isStorageConfigured();
 
+
 export default function UploadForm() {
 
     const [uploading, setUploading] = useState(false);

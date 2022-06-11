@@ -20,7 +20,10 @@ export default class SignUpForm extends Component {
     handleSubmit = async (evt) => {
         evt.preventDefault()
         try {
-          const {name, email, password} = this.state
+          
+
+          const {name1, email, password} = this.state
+          let name = name1[0].toUpperCase() + name1.substring(1);
           const formData = {name, email, password}
           const user = await signUp(formData)
           this.props.setUser(user)
@@ -37,7 +40,7 @@ export default class SignUpForm extends Component {
             <div className="form-container">
               <form autoComplete="off" onSubmit={this.handleSubmit}>
                 <label>Name</label>
-                <input type="text" name="name" value={this.state.name} onChange={this.handleChange} required />
+                <input type="text" name="name1" value={this.state.name1} onChange={this.handleChange} required />
                 <label>Email</label>
                 <input type="email" name="email" value={this.state.email} onChange={this.handleChange} required />
                 <label>Password</label>
