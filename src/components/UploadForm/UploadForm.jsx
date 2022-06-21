@@ -1,15 +1,9 @@
 import { useState } from 'react';
 import { post1PDF} from '../../utilities/azure-api'
 import { deleteItem } from '../../utilities/azure-api'
-import Table from '../Table/Table'
-import Table2 from '../Table/Table2'
-import List from '../List/List'
-import collectTableData from '../List/List'
 import { useEffect } from "react";
-import { allPDFs } from "../../utilities/azure-api"
-
-
-// import Path from 'path';
+import { Typography, Button, TextField, Box } from '@mui/material'
+import { getBlobsInContainer } from "../AzureStorageBlob/AzureStorageBlob"
 import uploadFileToBlob, { isStorageConfigured } from '../AzureStorageBlob/AzureStorageBlob';
 
 const storageConfigured = isStorageConfigured();
@@ -20,80 +14,53 @@ export default function UploadForm() {
     const [uploading, setUploading] = useState(false);
     const [inputKey, setInputKey] = useState(Math.random().toString(36));
     const [fileSelected, setFileSelected] = useState(null)
-    const [blobList, setBlobList] = useState(1)
-    
-    
-
-    useEffect(() => {
-      const collectTableData2 = async (event) => {
-        
-        
-        const allPDFshere = await allPDFs()
-        setInvoiceTableInfo(allPDFshere)
-        
-        // console.log(invoiceTableInfo[1].blobURL)
-
-        return "dog";
-        };
-      collectTableData2()
-      }, [blobList])
-    
-    const [invoiceTableInfo, setInvoiceTableInfo] = useState({});
-    const [invoiceData, setInvoiceData] = useState()
-    const [sizesState, setSizesState] = useState()
-    
-    useEffect(() => {
-        collectTableData()
-    }, [])
-
-    useEffect(() => {
-        listDataSet()
-    }, [invoiceTableInfo])
-
-
-    
-    const collectTableData = async (event) => {
-        
-        
-        const allPDFshere = await allPDFs()
-        setInvoiceTableInfo(allPDFshere)
-        
-        // console.log(invoiceTableInfo[1].blobURL)
-
-        return "dog";
-        };
-   
+    const [invoiceTableInfo2, setInvoiceTableInfo2] = useState({});
+    const [values2, setValues2] = useState([1])
+    const [blobsInContainer, setBlobsInContainer] = useState()
   
-      const listDataSet = async (event) => {
-            
-              let sizes = invoiceTableInfo.map(car => {
-                  setSizesState(sizesState)
-                  
-                  return <li> <a href={car.blobURL}> {car.blobURL} </a> </li>
-                });
-                console.log("sizes",sizes);
-                setSizesState(sizes)
-              }
+    
+    
+    useEffect(() => {
+      const blobsInContainer4 = async (event) => {
+        let blobsInContainer4 = await getBlobsInContainer()
+        setInvoiceTableInfo2(blobsInContainer4) 
+        }
+      blobsInContainer4()
+      }, [,blobsInContainer])
+
 
 
     
-    
+
+    useEffect(() => {
+      const values = Object.values(invoiceTableInfo2)
+      setValues2(values)
+      console.log('values',values2)
+    }, [invoiceTableInfo2])
+
+
 //------------------- list above
     
-    
-    
       const DisplayForm = () => (
-        
         <div>
-            <input type="file" onChange={onFileChange} key={inputKey || ''} />
-            <button type="submit" onClick={onFileUpload}>
-                Upload!2
-            </button>
+            <Box
+              component="span"
+              m={1}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={'center'}
+            >
+              <TextField type="file" sx={{ height: 40 }} size='small' onChange={onFileChange} key={inputKey || ''} />
+              
+              <Button  variant='outlined' sx={{ height: 40 }}  onClick={onFileUpload}>
+                  Upload!
+              </Button>
+            </ Box>
         </div>
     )
 
     const onFileChange = (event) => {
-        
         setFileSelected(event.target.files[0])
     }
 
@@ -105,87 +72,36 @@ export default function UploadForm() {
 
 
     const onFileUpload = async (event) => {
-       
       setUploading(true);
         const blobsInContainer = await uploadFileToBlob(fileSelected);
-        setBlobList(blobsInContainer);
-        console.log("blobsincontainer2", blobsInContainer.slice(-1)[0] )
-        
-
-        const newPdfModelItem = blobsInContainer.slice(-1)[0]
-        const newPdfModelItemObject = {blobURL: newPdfModelItem}
-
-        console.log("newPdfModelItemObject", newPdfModelItemObject)
-        // console.log("newPDFModelItem", newPdfModelItem)
-        
+        setBlobsInContainer(blobsInContainer)
         setFileSelected(null);
         setUploading(false);
         setInputKey(Math.random().toString(36));
-        const returnedFromPDFModel = await post1PDF(newPdfModelItemObject)
-        console.log("returnedfrompdfmodel", returnedFromPDFModel)
-
         deletePDF()
-
     };
 
     return (
         <>
         <div>
-        <h1>Upload file to Azure Blob Storage</h1>
+        <Typography variant='h4' padding='40px' color='primary'>Upload File To Azure Blob Storage</Typography>
         {storageConfigured && !uploading && DisplayForm()}
         {storageConfigured && uploading && <div>Uploading</div>}
         <hr />
         <div>
-          <h2>Container items</h2>
-          <ul>
-                <li>
-                  <div>
-                    <br />
-                    <h4> {blobList[1]} </h4> 
-                    <button onClick={deleteItem} > Delete Item </button>
-                  </div>
-                </li>
-                <li>
-                  <div>
-                    <br />
-                    <img src={blobList[2]} ></img>
-                  </div>
-                </li>
-          </ul>
-          
+        <Typography variant='h4' padding='20px' color='primary'>Items In Storage</Typography>
         </div>
         {/* {storageConfigured && blobList.length > 0 && DisplayImagesFromContainer()} */}
         {!storageConfigured && <div>Storage is not configured.</div>}
       </div>
-      
             <ol>
-                {sizesState}
-
+                {values2.map(user => 
+                  <li key={user.name} >
+                    <hr />
+                    <a href={user.url}>{user.name}</a>
+                  </li>)}
             </ol>
-      {/* <List /> */}
       </>
     );
   };
        
-
-
-
-
-      // const DisplayImagesFromContainer = () => (
-    //     <div>
-    //       <h2>Container items</h2>
-    //       <ul>
-    //         {blobList.map((item) => {
-    //           return (
-    //             <li key={item}>
-    //               <div>
-    //                 {item}
-    //                 <br />
-    //                 <img src={item} alt={item} height="200" />
-    //               </div>
-    //             </li>
-    //           );
-    //         })}
-    //       </ul>
-    //     </div>
-    //   );

@@ -1,10 +1,9 @@
-// ./src/azure-storage-blob.ts
 
-// <snippet_package>
-// THIS IS SAMPLE CODE ONLY - NOT MEANT FOR PRODUCTION USE
-import { BlobServiceClient, ContainerClient} from '@azure/storage-blob';
+import { BlobServiceClient, ContainerClient, listBlobsFlat} from '@azure/storage-blob';
 
-const containerName = `tutorial-container6`;
+
+
+export const containerName = `tutorial-container6`;
 let sasToken = process.env.REACT_APP_STORAGESASTOKEN;
 const storageAccountName = process.env.REACT_APP_STORAGERESOURCENAME; 
 // </snippet_package>
@@ -21,16 +20,38 @@ export const isStorageConfigured = () => {
 
 // <snippet_getBlobsInContainer>
 // return list of blobs in container to display
-const getBlobsInContainer = async (containerClient, file) => {
-  const returnedBlobUrls = [];
+export const getBlobsInContainer = async (containerClient, file) => {
+  const returnedBlobUrls = {};
+  
+  const blobService2 = new BlobServiceClient(
+    `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`
+  );
+  
+  
+  let containerClient2 = blobService2.getContainerClient(containerName);
+  await containerClient2.createIfNotExists({
+    access: 'container',
+  });
 
+  
   // get list of blobs in container
   // eslint-disable-next-line
-  for await (const blob of containerClient.listBlobsFlat()) {
+  
+  for await (const blob of containerClient2.listBlobsFlat()) {
     // if image is public, just construct URL
-    returnedBlobUrls.push(
-      `https://${storageAccountName}.blob.core.windows.net/${containerName}/${blob.name}`
-    );
+    
+
+    let cat = {
+      name: blob.name,
+      createdDate: blob.properties.createdOn,
+      url: `https://${storageAccountName}.blob.core.windows.net/${containerName}/${blob.name}`
+    }
+    
+
+
+    
+    returnedBlobUrls[blob.name] = cat
+    
   }
 
   return returnedBlobUrls;
@@ -59,6 +80,11 @@ const uploadFileToBlob = async (file) => {
   const blobService = new BlobServiceClient(
     `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`
   );
+  
+
+
+
+
 
   // get Container - full public read access
   const containerClient = blobService.getContainerClient(containerName);
